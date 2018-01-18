@@ -37,7 +37,7 @@ public class WavefrontKafkaReporter extends ScheduledReporter
 
 	// when set to true, it will output the string into standard output, and will not use
 	// kafka.
-	private static final boolean stdout = true;
+	private static final boolean stdout = false;
 	
 	String topic;
 	ProducerConfig config;
