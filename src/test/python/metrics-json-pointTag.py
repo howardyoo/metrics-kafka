@@ -1,188 +1,222 @@
 # example of converting dropwizard metrics json into wavefront data for proxy.
 # supporting point tags in the message payload
 # howard yoo 2017.12.4
+# updated in 2018.1.17 - to add support for metric name point tags
 import json
 
 # example json string to parse.
 json_string = """
 {
-    "timers": {
-        "test.test-timer": {
-            "count": 43,
-            "max": 505.33599999999996,
-            "mean": 502.585391215306,
-            "min": 500.191,
-            "p50": 502.443,
-            "p75": 504.046,
-            "p95": 505.291,
-            "p98": 505.33599999999996,
-            "p99": 505.33599999999996,
-            "p999": 505.33599999999996,
-            "stddev": 1.6838970975560197,
-            "m15_rate": 0.8076284847453551,
-            "m1_rate": 0.8883929708459906,
-            "m5_rate": 0.8220236458023953,
-            "mean_rate": 0.9799289583409866,
-            "duration_units": "milliseconds",
-            "rate_units": "calls/second"
-        }
-    },
-    "durationUnit": "milliseconds",
-    "meters": {},
-    "clock": 1453287302764,
-    "hostName": "localhost",
-    "rateUnit": "second",
-    "histograms": {
-        "test.response-sizes": {
-            "count": 43,
-            "max": 142,
-            "mean": 123.29413148075862,
-            "min": 100,
-            "p50": 124,
-            "p75": 134,
-            "p95": 141,
-            "p98": 142,
-            "p99": 142,
-            "p999": 142,
-            "stddev": 12.28197980813012
-        }
-    },
-    "counters": {},
-    "gauges": {
-        "test.jvm.mem.pools.Code-Cache.used": {
-            "value": 769088
-        },
-        "test.jvm.mem.pools.Code-Cache.usage": {
-            "value": 0.015280405680338541
-        },
-        "test.jvm.mem.heap.committed": {
-            "value": 128974848
-        },
-        "test.jvm.mem.pools.PS-Old-Gen.usage": {
-            "value": 0.00048653738839285715
-        },
-        "test.jvm.mem.non-heap.used": {
-            "value": 17222048
-        },
-        "test.jvm.gc.PS-MarkSweep.count": {
-            "value": 0
-        },
-        "test.jvm.mem.pools.Code-Cache.init": {
-            "value": 2555904
-        },
-        "test.jvm.mem.pools.PS-Survivor-Space.usage": {
-            "value": 0.99683837890625
-        },
-        "test.jvm.mem.pools.PS-Eden-Space.max": {
-            "value": 705691648
-        },
-        "test.jvm.mem.pools.PS-Perm-Gen.init": {
-            "value": 22020096
-        },
-        "test.jvm.mem.total.init": {
-            "value": 158793728
-        },
-        "test.jvm.mem.heap.max": {
-            "value": 1908932608
-        },
-        "test.jvm.mem.heap.init": {
-            "value": 134217728
-        },
-        "test.jvm.mem.pools.PS-Eden-Space.usage": {
-            "value": 0.039622597318878856
-        },
-        "test.jvm.mem.pools.PS-Survivor-Space.used": {
-            "value": 5226304
-        },
-        "test.jvm.mem.pools.Code-Cache.committed": {
-            "value": 2555904
-        },
-        "test.jvm.mem.pools.PS-Old-Gen.committed": {
-            "value": 89128960
-        },
-        "test.jvm.mem.non-heap.max": {
-            "value": 136314880
-        },
-        "test.jvm.gc.PS-Scavenge.count": {
-            "value": 1
-        },
-        "test.jvm.mem.pools.PS-Survivor-Space.init": {
-            "value": 5242880
-        },
-        "test.jvm.mem.pools.PS-Perm-Gen.committed": {
-            "value": 22020096
-        },
-        "test.jvm.mem.pools.PS-Eden-Space.used": {
-            "value": 27961336
-        },
-        "test.jvm.mem.pools.PS-Old-Gen.used": {
-            "value": 696384
-        },
-        "test.jvm.mem.pools.Code-Cache.max": {
-            "value": 50331648
-        },
-        "test.jvm.mem.pools.PS-Perm-Gen.usage": {
-            "value": 0.19135079732755336
-        },
-        "test.jvm.mem.total.committed": {
-            "value": 153550848
-        },
-        "test.jvm.mem.non-heap.init": {
-            "value": 24576000
-        },
-        "test.jvm.mem.pools.PS-Eden-Space.committed": {
-            "value": 34603008
-        },
-        "test.jvm.mem.total.max": {
-            "value": 2045247488
-        },
-        "test.jvm.mem.pools.PS-Survivor-Space.committed": {
-            "value": 5242880
-        },
-        "test.jvm.gc.PS-MarkSweep.time": {
-            "value": 0
-        },
-        "test.jvm.mem.heap.used": {
-            "value": 33884024
-        },
-        "test.jvm.mem.heap.usage": {
-            "value": 0.017750246319853318
-        },
-        "test.jvm.mem.pools.PS-Perm-Gen.max": {
-            "value": 85983232
-        },
-        "test.jvm.mem.pools.PS-Survivor-Space.max": {
-            "value": 5242880
-        },
-        "test.jvm.mem.pools.PS-Old-Gen.init": {
-            "value": 89128960
-        },
-        "test.jvm.mem.total.used": {
-            "value": 51106240
-        },
-        "test.jvm.mem.pools.PS-Perm-Gen.used": {
-            "value": 16453128
-        },
-        "test.jvm.mem.pools.PS-Eden-Space.init": {
-            "value": 34603008
-        },
-        "test.jvm.mem.non-heap.committed": {
-            "value": 24576000
-        },
-        "test.jvm.gc.PS-Scavenge.time": {
-            "value": 19
-        },
-        "test.jvm.mem.pools.PS-Old-Gen.max": {
-            "value": 1431306240
-        },
-        "test.jvm.mem.non-heap.usage": {
-            "value": 0.12634142362154446
-        }
-    },
-    "ip": "192.158.1.113",
-    "pointTags":{  
-      "appName":"myapp",
-      "cluster":"c-1"
+   "hostName":"localhost",
+   "timers":{
+      "test.test-timer{}":{
+         "count":1,
+         "max":503.627465,
+         "mean":503.627465,
+         "min":503.627465,
+         "p50":503.627465,
+         "p75":503.627465,
+         "p95":503.627465,
+         "p98":503.627465,
+         "p99":503.627465,
+         "p999":503.627465,
+         "stddev":0.0,
+         "m15_rate":0.0,
+         "m1_rate":0.0,
+         "m5_rate":0.0,
+         "mean_rate":0.6491825224591039,
+         "duration_units":"milliseconds",
+         "rate_units":"calls/second"
+      }
+   },
+   "histograms":{
+      "test.response-sizes{}":{
+         "count":1,
+         "max":100,
+         "mean":100.0,
+         "min":100,
+         "p50":100.0,
+         "p75":100.0,
+         "p95":100.0,
+         "p98":100.0,
+         "p99":100.0,
+         "p999":100.0,
+         "stddev":0.0
+      }
+   },
+   "counters":{
+      "test.requests{mode=test, type=counter2}":{
+         "count":1
+      },
+      "test.requests{mode=test, type=counter}":{
+         "count":1
+      }
+   },
+   "ip":"192.168.2.110",
+   "rateUnit":"second",
+   "pointTags":{
+      "cluster":"c-1",
+      "appName":"myapp"
+   },
+   "gauges":{
+      "test.jvm.mem.non-heap.used{}":{
+         "value":19992776
+      },
+      "test.jvm.mem.pools.Metaspace.usage{}":{
+         "value":0.9669634285619704
+      },
+      "test.jvm.mem.total.init{}":{
+         "value":270991360
+      },
+      "test.jvm.mem.pools.PS-Survivor-Space.max{}":{
+         "value":11010048
+      },
+      "test.jvm.mem.pools.PS-Old-Gen.used-after-gc{}":{
+         "value":0
+      },
+      "test.jvm.mem.pools.Metaspace.init{}":{
+         "value":0
+      },
+      "test.jvm.mem.heap.usage{}":{
+         "value":0.004368015908500841
+      },
+      "test.jvm.mem.pools.Compressed-Class-Space.max{}":{
+         "value":1073741824
+      },
+      "test.jvm.mem.total.max{}":{
+         "value":3817865215
+      },
+      "test.jvm.mem.heap.committed{}":{
+         "value":257425408
+      },
+      "test.jvm.mem.pools.PS-Eden-Space.committed{}":{
+         "value":67108864
+      },
+      "test.jvm.mem.pools.PS-Eden-Space.init{}":{
+         "value":67108864
+      },
+      "test.jvm.mem.heap.init{}":{
+         "value":268435456
+      },
+      "test.jvm.mem.pools.PS-Old-Gen.used{}":{
+         "value":16384
+      },
+      "test.jvm.mem.pools.PS-Old-Gen.max{}":{
+         "value":2863661056
+      },
+      "test.jvm.mem.pools.Code-Cache.used{}":{
+         "value":3282240
+      },
+      "test.jvm.mem.pools.PS-Old-Gen.committed{}":{
+         "value":179306496
+      },
+      "test.jvm.mem.pools.Compressed-Class-Space.init{}":{
+         "value":0
+      },
+      "test.jvm.mem.pools.Compressed-Class-Space.usage{}":{
+         "value":0.0018396005034446716
+      },
+      "test.jvm.gc.PS-MarkSweep.time{}":{
+         "value":0
+      },
+      "test.jvm.mem.pools.PS-Eden-Space.used-after-gc{}":{
+         "value":0
+      },
+      "test.jvm.mem.pools.Code-Cache.committed{}":{
+         "value":3342336
+      },
+      "test.jvm.mem.non-heap.max{}":{
+         "value":-1
+      },
+      "test.jvm.mem.heap.max{}":{
+         "value":3817865216
+      },
+      "test.jvm.mem.pools.PS-Eden-Space.max{}":{
+         "value":1409286144
+      },
+      "test.jvm.mem.pools.PS-Survivor-Space.usage{}":{
+         "value":0.7815043131510416
+      },
+      "test.jvm.mem.pools.PS-Old-Gen.usage{}":{
+         "value":5.721347491761259E-6
+      },
+      "test.jvm.mem.heap.used{}":{
+         "value":16676496
+      },
+      "test.jvm.mem.pools.Metaspace.committed{}":{
+         "value":15466496
+      },
+      "test.jvm.mem.pools.PS-Old-Gen.init{}":{
+         "value":179306496
+      },
+      "test.jvm.mem.non-heap.committed{}":{
+         "value":20905984
+      },
+      "test.jvm.mem.total.used{}":{
+         "value":36918568
+      },
+      "test.jvm.mem.pools.Compressed-Class-Space.committed{}":{
+         "value":2097152
+      },
+      "test.jvm.mem.pools.Metaspace.used{}":{
+         "value":14975872
+      },
+      "test.jvm.mem.total.committed{}":{
+         "value":278331392
+      },
+      "test.jvm.mem.pools.Metaspace.max{}":{
+         "value":-1
+      },
+      "test.jvm.mem.pools.PS-Survivor-Space.used-after-gc{}":{
+         "value":8604400
+      },
+      "test.jvm.mem.pools.Code-Cache.init{}":{
+         "value":2555904
+      },
+      "test.jvm.mem.pools.PS-Survivor-Space.used{}":{
+         "value":8604400
+      },
+      "test.jvm.mem.pools.Compressed-Class-Space.used{}":{
+         "value":1975256
+      },
+      "test.jvm.mem.pools.PS-Survivor-Space.committed{}":{
+         "value":11010048
+      },
+      "test.jvm.gc.PS-MarkSweep.count{}":{
+         "value":0
+      },
+      "test.jvm.gc.PS-Scavenge.count{}":{
+         "value":1
+      },
+      "test.jvm.mem.pools.Code-Cache.usage{}":{
+         "value":0.013081614176432292
+      },
+      "test.jvm.mem.pools.Code-Cache.max{}":{
+         "value":251658240
+      },
+      "test.jvm.mem.non-heap.init{}":{
+         "value":2555904
+      },
+      "test.jvm.mem.pools.PS-Eden-Space.used{}":{
+         "value":8055712
+      },
+      "test.jvm.gc.PS-Scavenge.time{}":{
+         "value":10
+      },
+      "test.jvm.mem.non-heap.usage{}":{
+         "value":-2.0245744E7
+      },
+      "test.jvm.mem.pools.PS-Survivor-Space.init{}":{
+         "value":11010048
+      },
+      "test.jvm.mem.pools.PS-Eden-Space.usage{}":{
+         "value":0.005716164906819661
+      }
+   },
+   "durationUnit":"milliseconds",
+   "clock":1516244746764,
+   "meters":{
+
    }
 }
 """
@@ -256,17 +290,35 @@ def pointTagsToStr(pointTags):
 		s += "\"" + pointTags[key] + "\""
 	return s
 
+def strToDict(string):
+	if string.find('{}') > -1:
+		metric = string.split('{}')
+		metric[1] = {}
+		return metric
+	if string.find('{') > -1:
+		metric = string.split('{')
+		ptstring = metric[1].split('}')[0]
+		ptdict = dict(x.strip().split('=') for x in ptstring.split(','))
+		metric[1] = ptdict
+		return metric
+	else:
+		v = [string, {}]
+		return v
+
 def toWavefrontData(metricName, value, source, timestamp, pointTags):
 	s = ""
 	if metricName != "":
+		mtrArray = strToDict(metricName)
+
 		if value != "":
 			if source != "":
-				s += metricName + " " + value
+				s += mtrArray[0] + " " + value
 				if timestamp != "":
 					s += " " + timestamp
 				s += " source=\"" + source + "\""
 				if pointTags is not None:
 					s += pointTagsToStr(pointTags)
+					s += pointTagsToStr(mtrArray[1])
 	return s
 
 def convertMetricsToWavefront(jsondata):
