@@ -5,18 +5,23 @@ import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
+import java.util.Map;
+import java.util.HashMap;
 
-import com.codahale.metrics.ConsoleReporter;
-import com.codahale.metrics.Histogram;
-import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.Timer.Context;
-import com.codahale.metrics.jvm.GarbageCollectorMetricSet;
-import com.codahale.metrics.jvm.MemoryUsageGaugeSet;
+import io.dropwizard.metrics5.ConsoleReporter;
+import io.dropwizard.metrics5.Histogram;
+import io.dropwizard.metrics5.MetricRegistry;
+import io.dropwizard.metrics5.MetricName;
+import io.dropwizard.metrics5.Counter;
+import io.dropwizard.metrics5.Timer.Context;
+import io.dropwizard.metrics5.jvm.GarbageCollectorMetricSet;
+import io.dropwizard.metrics5.jvm.MemoryUsageGaugeSet;
 
 import io.github.hengyunabc.metrics.WavefrontKafkaReporter;
 import kafka.producer.ProducerConfig;
 
-public class WavefrontKafkaReporterSample {
+public class WavefrontKafkaReporterSample
+{
 	static final MetricRegistry metrics = new MetricRegistry();
 	static public Timer timer = new Timer();
 
@@ -28,8 +33,28 @@ public class WavefrontKafkaReporterSample {
 		metrics.register("jvm.mem", new MemoryUsageGaugeSet());
 		metrics.register("jvm.gc", new GarbageCollectorMetricSet());
 
+		// the new point tags for metric name feature
+		Map<String, String> tags = new HashMap<String, String>();
+		tags.put("type", "counter");
+		tags.put("mode", "test");
+
+		MetricName name = new MetricName("requests", tags);
+		Counter counter = metrics.counter(name);
+
+		// counter increment test
+		counter.inc();
+
+		// second counter, with same name, but different tags
+		Map<String, String> tags2 = new HashMap<String, String>();
+		tags2.put("type", "counter2");
+		tags2.put("mode", "test");
+
+		MetricName name2 = new MetricName("requests", tags2);
+		Counter counter2 = metrics.counter(name2);
+		counter2.inc();
+
 		final Histogram responseSizes = metrics.histogram("response-sizes");
-		final com.codahale.metrics.Timer metricsTimer = metrics
+		final io.dropwizard.metrics5.Timer metricsTimer = metrics
 				.timer("test-timer");
 
 		timer.schedule(new TimerTask() {

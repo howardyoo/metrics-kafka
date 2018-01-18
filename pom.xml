@@ -8,7 +8,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.hengyunabc</groupId>
 	<artifactId>metrics-kafka</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.3</version>
 
 	<name>metrics-kafka</name>
 	<description>Dropwizard Metrics reporter for kafka.</description>
@@ -30,6 +30,11 @@
 			<name>hengyunabc</name>
 			<email>hengyunabc@gmail.com</email>
 		</developer>
+		<developer>
+			<id>howardyoo</id>
+			<name>howardyoo</name>
+			<email>howardyoo@gmail.com</email>
+		</developer>
 	</developers>
 
 	<scm>
@@ -45,14 +50,14 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<metrics.version>3.1.2</metrics.version>
+		<metrics.version>5.0.0-SNAPSHOT</metrics.version>
 
 		<!-- Logging -->
 		<logback.version>1.0.13</logback.version>
-		<slf4j.version>1.7.5</slf4j.version>
+		<slf4j.version>1.7.25</slf4j.version>
 
 		<!-- Test -->
-		<junit.version>4.11</junit.version>
+		<junit.version>4.12</junit.version>
 
 	</properties>
 
@@ -91,19 +96,19 @@
 		</dependency>
 
 		<dependency>
-			<groupId>io.dropwizard.metrics</groupId>
+			<groupId>io.dropwizard.metrics5</groupId>
 			<artifactId>metrics-core</artifactId>
 			<version>${metrics.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>io.dropwizard.metrics</groupId>
+			<groupId>io.dropwizard.metrics5</groupId>
 			<artifactId>metrics-json</artifactId>
 			<version>${metrics.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>io.dropwizard.metrics</groupId>
+			<groupId>io.dropwizard.metrics5</groupId>
 			<artifactId>metrics-jvm</artifactId>
 			<version>${metrics.version}</version>
 			<scope>test</scope>
@@ -162,35 +167,6 @@
 		</dependency>
 
 	</dependencies>
-
-	<profiles>
-		<profile>
-			<id>release-sign-artifacts</id>
-			<activation>
-				<property>
-					<name>performRelease</name>
-					<value>true</value>
-				</property>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>sign-artifacts</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
 
 	<build>
 		<plugins>

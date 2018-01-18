@@ -6,12 +6,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
-import com.codahale.metrics.ConsoleReporter;
-import com.codahale.metrics.Histogram;
-import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.Timer.Context;
-import com.codahale.metrics.jvm.GarbageCollectorMetricSet;
-import com.codahale.metrics.jvm.MemoryUsageGaugeSet;
+import io.dropwizard.metrics5.ConsoleReporter;
+import io.dropwizard.metrics5.Histogram;
+import io.dropwizard.metrics5.MetricRegistry;
+import io.dropwizard.metrics5.Timer.Context;
+import io.dropwizard.metrics5.jvm.GarbageCollectorMetricSet;
+import io.dropwizard.metrics5.jvm.MemoryUsageGaugeSet;
 
 import io.github.hengyunabc.metrics.KafkaReporter;
 import kafka.producer.ProducerConfig;
@@ -29,7 +29,7 @@ public class KafkaReporterSample {
 		metrics.register("jvm.gc", new GarbageCollectorMetricSet());
 
 		final Histogram responseSizes = metrics.histogram("response-sizes");
-		final com.codahale.metrics.Timer metricsTimer = metrics
+		final io.dropwizard.metrics5.Timer metricsTimer = metrics
 				.timer("test-timer");
 
 		timer.schedule(new TimerTask() {

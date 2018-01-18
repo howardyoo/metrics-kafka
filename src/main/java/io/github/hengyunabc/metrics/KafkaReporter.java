@@ -8,18 +8,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import io.dropwizard.metrics5.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.codahale.metrics.Counter;
-import com.codahale.metrics.Gauge;
-import com.codahale.metrics.Histogram;
-import com.codahale.metrics.Meter;
-import com.codahale.metrics.MetricFilter;
-import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.ScheduledReporter;
-import com.codahale.metrics.Timer;
-import com.codahale.metrics.json.MetricsModule;
+import io.dropwizard.metrics5.json.MetricsModule;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kafka.javaapi.producer.Producer;
@@ -197,20 +190,20 @@ public class KafkaReporter extends ScheduledReporter {
 		}
 	}
 
-	private Map<String, Object> addPrefix(SortedMap<String,?> map){
+	private Map<String, Object> addPrefix(SortedMap<MetricName,?> map){
 		Map<String, Object> result = new HashMap<String, Object>(map.size());
-		for (Entry<String, ?> entry : map.entrySet()) {
-			result.put(prefix + entry.getKey(), entry.getValue());
+		for (Entry<MetricName, ?> entry : map.entrySet()) {
+			result.put(prefix + entry.getKey().getKey() + entry.getKey().getTags(), entry.getValue());
 		}
 		return result;
 	}
 
 	@SuppressWarnings("rawtypes")
 	@Override
-	public void report(SortedMap<String, Gauge> gauges,
-			SortedMap<String, Counter> counters,
-			SortedMap<String, Histogram> histograms,
-			SortedMap<String, Meter> meters, SortedMap<String, Timer> timers) {
+	public void report(SortedMap<MetricName, Gauge> gauges,
+			SortedMap<MetricName, Counter> counters,
+			SortedMap<MetricName, Histogram> histograms,
+			SortedMap<MetricName, Meter> meters, SortedMap<MetricName, Timer> timers) {
 		
 		final Map<String, Object> result = new HashMap<String, Object>(16);
 		
